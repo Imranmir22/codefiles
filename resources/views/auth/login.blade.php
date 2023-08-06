@@ -45,7 +45,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
-                                <a href="{{ route('register')}}" class="btn btn-primary ms-5">
+                                <a href="{{ route('create-user')}}" class="btn btn-primary ms-5">
                                     {{ __('Register') }}
                                 </a>
                                

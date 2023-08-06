@@ -29,9 +29,8 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
             ]
         );
-        $user->assignrole(2);
         auth()->login($user);
-        return redirect()->to('/dashboard');
+        return redirect()->to('/gallery');
     }
     public function login()
     {
@@ -49,19 +48,14 @@ class UserController extends Controller
             ]);
         }
         
-        return redirect()->to('/dashboard');
+        return redirect()->to('/gallery');
     }
     public function dashboard()
     {
-        if(auth()->user()->hasRole('admin'))
-        {
-            $websites = Website::with('user')->get();
-            return view('admin.dashboard',compact('websites'));
-        }
-        else{
-            $users =User::with('websites')->find(Auth::id());
-            return view('user.dashboard',compact('users'));
-        }
+        
+        $users =User::with('websites')->find(Auth::id());
+        return view('user.gallery',compact('users'));
+        
     }
     public function logout()
     {

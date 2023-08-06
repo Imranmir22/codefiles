@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\GalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ use App\Http\Controllers\WebsiteController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('register',[UserController::class , 'register']);
+Route::get('register',[UserController::class , 'register'])->name('create-user');
 Route::post('add-user',[UserController::class , 'addUser'])->name('register');
 Route::get('login',[UserController::class , 'login'])->name('login');
 Route::post('sign-in',[UserController::class , 'loginUSer'])->name('sign-in');
@@ -22,12 +23,14 @@ Route::post('sign-in',[UserController::class , 'loginUSer'])->name('sign-in');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('logout',[UserController::class , 'logout']);
-    Route::get('dashboard',[UserController::class , 'dashboard']);
+    Route::get('gallery',[GalleryController::class , 'index']);
     Route::post('add-url',[WebsiteController::class , 'addUrl'])->name('add-url');
-    Route::get('count-clicks',[WebsiteController::class , 'countClick'])->name('count-clicks');
+    Route::post('upload-images',[GalleryController::class,'upload'])->name('upload');
+    Route::get('reorder',[GalleryController::class,'reorder'])->name('reorder');
+    // Route::get('count-clicks',[WebsiteController::class , 'countClick'])->name('count-clicks');
        
 });
 
 Route::get('/', function () {
-    return redirect()->to('dashboard');
+    return redirect()->to('gallery');
 });
