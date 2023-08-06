@@ -1,46 +1,60 @@
+@extends('auth.header')
 
-<head>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-</head>
 @section('content')
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Login') }}</div>
 
-    <h2>Log In</h2>
-    <div class="container">
-        @if(Session::has('message'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ Session::get('message') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          @endif
+                <div class="card-body">
+                    <form method="POST" action="{{ route('sign-in') }}">
+                        @csrf
 
-    <form method="POST" action="/sign-in">
-        @csrf
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
-        </div>
-        @if($errors->has('email'))
-        <div class="error">{{ $errors->first('email') }}</div>
-        @endif
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" name="password">
-        </div>
-        @if($errors->has('password'))
-        <div class="error">{{ $errors->first('password') }}</div>
-        @endif
-        <div class="d-flex flex-inline">
-            <div class="form-group mt-2">
-                <button style="cursor:pointer" type="submit" class="btn btn-primary ">Login</button>
+                        <div class="form-group row">
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mt-4">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                       
+                        <div class="form-group row mb-0  mt-4">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Login') }}
+                                </button>
+                                <a href="{{ route('register')}}" class="btn btn-primary ms-5">
+                                    {{ __('Register') }}
+                                </a>
+                               
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group mt-2 ms-2">
-                <a href="{{ url('/register') }}" style="cursor:pointer" class="btn btn-primary">Register</a>
-            </div>
-        
-         </div>
-    </form>
+        </div>
+    </div>
 </div>
-
+@endsection

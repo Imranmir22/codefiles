@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebsiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,17 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('register',[UserController::class , 'register']);
-Route::post('add-user',[UserController::class , 'addUser']);
+Route::post('add-user',[UserController::class , 'addUser'])->name('register');
 Route::get('login',[UserController::class , 'login'])->name('login');
-Route::post('sign-in',[UserController::class , 'loginUSer']);
-Route::get('count-words',[UserController::class , 'countWords']);
+Route::post('sign-in',[UserController::class , 'loginUSer'])->name('sign-in');
+
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard',[UserController::class , 'dashboard']);
     Route::get('logout',[UserController::class , 'logout']);
-   
+    Route::get('dashboard',[UserController::class , 'dashboard']);
+    Route::post('add-url',[WebsiteController::class , 'addUrl'])->name('add-url');
+    Route::get('count-clicks',[WebsiteController::class , 'countClick'])->name('count-clicks');
+       
 });
 
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect()->to('dashboard');
 });

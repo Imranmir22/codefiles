@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Hash;
 use Auth;
+use App\Models\Website;
 
 class UserController extends Controller
 {
@@ -17,24 +18,18 @@ class UserController extends Controller
         $request->validate([
             'name'=>'required',
             'email'=>'email |unique:users|required',
-            'password'=>'required |min:6 ',
-            'profile' =>'nullable|sometimes|dimensions:max_width=400,max_height=400'
+            'password'=>'required |min:6|confirmed ',
         ],
-        ['profile.dimensions'=>'profile image size should be 400 x 400']
     );
-        if($request->has('profile'))
-        {
-            $file = $request->profile;
-            $path = $file->move('uploads',uniqid().".".$file->getClientOriginalExtension());
-        }
+       
         $user = User::create(
             [
                 'name'=>$request->name,
                 'email'=>$request->email,
                 'password' => Hash::make($request->password),
-                'profile' => $path ?? null
             ]
         );
+        $user->assignrole(2);
         auth()->login($user);
         return redirect()->to('/dashboard');
     }
@@ -58,54 +53,20 @@ class UserController extends Controller
     }
     public function dashboard()
     {
-        $users = User::paginate(30); 
-        return view('dashboard',compact('users'));
+        if(auth()->user()->hasRole('admin'))
+        {
+            $websites = Website::with('user')->get();
+            return view('admin.dashboard',compact('websites'));
+        }
+        else{
+            $users =User::with('websites')->find(Auth::id());
+            return view('user.dashboard',compact('users'));
+        }
     }
     public function logout()
     {
         Auth::logout();
         return redirect('/login');
     }
-    public function countWords()
-    {
-        $str = "Lorem ipsum dolor sit amet 'consectetur adipiscing' elit, litora 'enim cum tellus' nisl 'ridiculus senectus' natoque, 'eros' vestibulum mauris aenean tempus lobortis. Accumsan 'volutpat semper auctor' tincidunt";
-            $i=0;
-            $strSize=0;
-            while($str[$i] ?? null)
-            {
-            $strSize++; 
-            $i++;
-            }   
-            $words=0;
-            $flag = 0 ;
-          for( $i = 0 ; $i < $strSize ; $i++)
-          {
-            if($str[$i+1] ?? null)
-            {
-                
-                if($str[$i+1]=="'")
-                {
-                    if($flag==1)
-                    {
-                        $words++;
-                        $flag=0;
-                        $i=$i+2;
-                    }else
-                    {
-                        $i++;
-                        $words++;
-                        $flag=1;
-                    }
-                }
-                else if($str[$i]==" ")
-                {
-                    if($flag!=1)
-                        $words++;
-                }
-            }else{
-                $words++;
-            }
-          }
-        echo "the number of words in your string are " .$words;
-    }
+   
 }
