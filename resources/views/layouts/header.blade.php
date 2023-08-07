@@ -10,7 +10,6 @@
             <a class="nav-link active" aria-current="page" href="{{ url('/dashboard') }}">Dashboard</a>
           </li>
         </ul>
-              <li><a class="dropdown-item" href="{{ url('logout') }}">Logout</a></li>
 
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" >
@@ -24,3 +23,8 @@
       </div>
     </div>
   </nav>
+  <script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
