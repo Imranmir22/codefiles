@@ -9,7 +9,7 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        $galleryImages = Image::orderBy('display_order')->get();
+        $galleryImages = Image::where('user_id',Auth::id())->orderBy('display_order')->get();
         return view('gallery.index', compact('galleryImages'));
     }
 
